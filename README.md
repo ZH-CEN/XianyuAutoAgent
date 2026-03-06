@@ -70,7 +70,7 @@ COOKIES_STR=填写网页端获取的cookie
 MODEL_BASE_URL=模型地址
 MODEL_NAME=模型名称
 #可选配置
-TOGGLE_KEYWORDS=接管模式切换关键词，默认为句号（输入句号切换为人工接管，再次输入则切换AI接管）
+TOGGLE_KEYWORDS=接管模式切换关键词，默认为句号（输入句号切换为人工接管，再次输入则切换AI接管），支持逗号分隔的多个关键词，例如：。,切换,接管
 SIMULATE_HUMAN_TYPING=True/False #模拟人工回复延迟
 
 注意：默认使用的模型是通义千问，如需使用其他API，请自行修改.env文件中的模型地址和模型名称；

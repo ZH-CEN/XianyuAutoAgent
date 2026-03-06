@@ -51,8 +51,9 @@ class XianyuLive:
         # 消息过期时间配置
         self.message_expire_time = int(os.getenv("MESSAGE_EXPIRE_TIME", "300000"))  # 消息过期时间，默认5分钟
         
-        # 人工接管关键词，从环境变量读取
-        self.toggle_keywords = os.getenv("TOGGLE_KEYWORDS", "。")
+        # 人工接管关键词，从环境变量读取（逗号分隔的关键词列表）
+        raw_keywords = os.getenv("TOGGLE_KEYWORDS", "。")
+        self.toggle_keywords = [kw.strip() for kw in raw_keywords.split(",") if kw.strip()] or ["。"]
         
         # 模拟人工输入配置
         self.simulate_human_typing = os.getenv("SIMULATE_HUMAN_TYPING", "False").lower() == "true"
@@ -356,26 +357,6 @@ class XianyuLive:
     async def handle_message(self, message_data, websocket):
         """处理所有类型的消息"""
         try:
-
-            try:
-                message = message_data
-                ack = {
-                    "code": 200,
-                    "headers": {
-                        "mid": message["headers"]["mid"] if "mid" in message["headers"] else generate_mid(),
-                        "sid": message["headers"]["sid"] if "sid" in message["headers"] else '',
-                    }
-                }
-                if 'app-key' in message["headers"]:
-                    ack["headers"]["app-key"] = message["headers"]["app-key"]
-                if 'ua' in message["headers"]:
-                    ack["headers"]["ua"] = message["headers"]["ua"]
-                if 'dt' in message["headers"]:
-                    ack["headers"]["dt"] = message["headers"]["dt"]
-                await websocket.send(json.dumps(ack))
-            except Exception as e:
-                pass
-
             # 如果不是同步包消息，直接返回
             if not self.is_sync_package(message_data):
                 return
